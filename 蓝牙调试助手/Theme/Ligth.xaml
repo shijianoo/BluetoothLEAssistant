@@ -1,0 +1,41 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="HeaderBackground" Color="#c7e0f4" />
+    <SolidColorBrush x:Key="FontForeground" Color="Black" />
+    <SolidColorBrush x:Key="ContentBackground" Color="White" />
+    <SolidColorBrush x:Key="SendAreaBackground" Color="#f0f0f1" />
+    <SolidColorBrush x:Key="SendAreaBorderBackground" Color="#282737" />
+    <SolidColorBrush x:Key="SendAreaBorderForeground" Color="Black" />
+    <SolidColorBrush x:Key="ServiceMouseOver" Color="#f0f0f1" />
+    <SolidColorBrush x:Key="CharacteristicMouseOver" Color="#e0e0e0" />
+    <SolidColorBrush x:Key="CharacteristicSelected" Color="#c9c9c9" />
+    <SolidColorBrush x:Key="StateAreaBackground" Color="#f0f0f1" />
+    <SolidColorBrush x:Key="ConnectBtnMouseOver" Color="#f0f0f1" />
+
+    <SolidColorBrush x:Key="FormTitleBackground" Color="White" />
+    <SolidColorBrush x:Key="FormBackground" Color="#eeeeee" />
+    <SolidColorBrush x:Key="FormbBtnMouseOver" Color="#c2e7fa" />
+    <SolidColorBrush x:Key="FormbBtnPressed" Color="#9cdcfc" />
+    <SolidColorBrush x:Key="FormbBorderBrush" Color="#f0f0f1" />
+    <SolidColorBrush x:Key="FormbLoseFocusBorderBrush" Color="#cececf" />
+
+
+    <SolidColorBrush x:Key="SkinbBtnBackground" Color="#eeeeee" />
+    <SolidColorBrush x:Key="SkinbBtnMouseOver" Color="#dedede" />
+    <SolidColorBrush x:Key="SkinbBtnPressed" Color="#d1d1d1" />
+
+    <SolidColorBrush x:Key="WatcherBackground" Color="White" />
+    <SolidColorBrush x:Key="WatcherBtnBackground" Color="#c2c2c2" />
+    <SolidColorBrush x:Key="WatcherBtnBorderMouseOver" Color="#747474" />
+    <SolidColorBrush x:Key="WatcherBtnPressed" Color="#919191" />
+
+    <SolidColorBrush x:Key="CharacteristicEncodingBtnBackground" Color="#1296db" />
+    <SolidColorBrush x:Key="CharacteristicEncodingBtnMouseOver" Color="#16aaf7" />
+    <SolidColorBrush x:Key="CharacteristicEncodingBtnPressed" Color="#1184bf" />
+
+    <SolidColorBrush x:Key="BLEListBoxItemMouseOver" Color="#e0e0e0" />
+    <SolidColorBrush x:Key="BLEListBoxItemPressed" Color="#e0e0e0" />
+
+    <SolidColorBrush x:Key="ScrollBarBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="ScrollBarForeground" Color="#b0b0b0" />
+    <SolidColorBrush x:Key="ScrollBarIsPressed" Color="#a8a8a8" />
+</ResourceDictionary>

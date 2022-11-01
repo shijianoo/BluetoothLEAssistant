@@ -1,0 +1,123 @@
+﻿<UserControl
+    x:Class="蓝牙调试助手.Views.PairingPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:蓝牙调试助手.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="450"
+    Height="250"
+    BorderBrush="{DynamicResource FormbBorderBrush}"
+    BorderThickness="1"
+    DataContext="{Binding Path=AiringPanel, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+    <Grid Background="{DynamicResource ContentBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition />
+            <RowDefinition Height="60" />
+        </Grid.RowDefinitions>
+        <Grid Background="{DynamicResource HeaderBackground}" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+            <TextBlock
+                Margin="10,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontSize="13"
+                Foreground="{DynamicResource FontForeground}"
+                Text="为设备配对" />
+
+            <Button
+                HorizontalAlignment="Right"
+                Background="{DynamicResource HeaderBackground}"
+                Command="{Binding ColseCommand}"
+                Foreground="{DynamicResource FontForeground}"
+                Style="{StaticResource PairingPanelCloseButton}" />
+        </Grid>
+
+        <StackPanel
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+            <TextBlock
+                Grid.Row="1"
+                FontSize="13"
+                Foreground="{DynamicResource FontForeground}"
+                Text="下面的PIN码与你配对的设备上显示的PIN码匹配吗?" />
+            <TextBlock
+                Grid.Row="1"
+                Margin="0,5"
+                HorizontalAlignment="Center"
+                FontSize="16"
+                FontWeight="Bold"
+                Foreground="{DynamicResource FontForeground}"
+                Text="{Binding Pin}" />
+        </StackPanel>
+
+
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="60"
+                Background="{DynamicResource WatcherBtnBackground}"
+                Command="{Binding ConfirmCommand}"
+                Content="{Binding ConfirmBtnContent}"
+                Foreground="{DynamicResource FontForeground}"
+                Visibility="{Binding ConfirmBtnIsVisible, Converter={StaticResource BoolToIsVisible}}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Height="30"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                            BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button
+                Width="60"
+                Margin="5,0,5,0"
+                Background="{DynamicResource WatcherBtnBackground}"
+                Command="{Binding CancelCommand}"
+                Content="{Binding CancelBtnContent}"
+                Foreground="{DynamicResource FontForeground}"
+                Visibility="{Binding CancelBtnIsVisible, Converter={StaticResource BoolToIsVisible}}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Height="30"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                            BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -1,0 +1,107 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hc="https://handyorg.github.io/handycontrol">
+    <Style x:Key="DataGridStyle" TargetType="DataGrid">
+        <Setter Property="ColumnHeaderStyle" Value="{DynamicResource ColumnHeaderStyle}" />
+        <Setter Property="CellStyle" Value="{DynamicResource CellStyle}" />
+        <Setter Property="RowStyle" Value="{DynamicResource RowStyle}" />
+        <!--  表格背景色  -->
+        <Setter Property="Background" Value="{DynamicResource ContentBackground}" />
+        <!--  表格边框  -->
+        <Setter Property="BorderThickness" Value="0" />
+
+        <!--  隔行背景显示不同的颜色  -->
+        <!--<Setter Property="AlternationCount" Value="2" />
+        <Setter Property="AlternatingRowBackground" Value="#f6f8fa" />-->
+        <!--  是否显示水平线还是垂直网格线跟线的颜色  -->
+        <Setter Property="GridLinesVisibility" Value="None" />
+        <Setter Property="HorizontalGridLinesBrush" Value="#272733" />
+        <Setter Property="VerticalGridLinesBrush" Value="#d0d7de" />
+        <!--  用户能否添加行  -->
+        <Setter Property="CanUserAddRows" Value="False" />
+        <!--  禁止显示行头或者列头  -->
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <!--  禁止在尾行手动添加数据  -->
+        <Setter Property="AutoGenerateColumns" Value="False" />
+
+        <Setter Property="Template" Value="{StaticResource DataGridControlTemplate}" />
+
+    </Style>
+
+    <Style x:Key="ColumnHeaderStyle" TargetType="DataGridColumnHeader">
+        <!--  每一列的标题高度  -->
+        <Setter Property="Height" Value="25" />
+        <!--  每一列的标题背景色  -->
+        <Setter Property="Background" Value="Transparent" />
+        <!--  每一列的标题的边框  -->
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <!--  每一列的标题的边框颜色  -->
+        <Setter Property="BorderBrush" Value="#e0e0e0" />
+        <!--  每一列的标题的内容对齐方式  -->
+        <!--<Setter Property="VerticalContentAlignment" Value="Center" />-->
+        <!--  每一列的标题的内容对齐方式  -->
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+
+        <!--  每一列的标题的字体大小  -->
+        <Setter Property="FontSize" Value="14" />
+
+        <!--  每一列的标题的字体颜色  -->
+        <Setter Property="Foreground" Value="{DynamicResource FontForeground}" />
+    </Style>
+
+    <Style x:Key="RowStyle" TargetType="DataGridRow">
+        <Setter Property="Cursor" Value="Arrow" />
+        <!--  每一行的背景色，注意 ：不是单元格的背景色  -->
+        <Setter Property="Background" Value="Transparent" />
+
+        <!--  每一行的边框，注意 ：不是单元格的背景色  -->
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="#e0e0e0" />
+        <Style.Triggers>
+            <!--<Trigger Property="IsMouseOver" Value="true">
+            -->
+            <!--  每一个行鼠标一上去的颜色  -->
+            <!--
+                <Setter Property="Background" Value="#F2F2F2" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+            -->
+            <!--  每一个行选中颜色  -->
+            <!--
+                <Setter Property="Background" Value="#E1B723" />
+            </Trigger>-->
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="CellStyle" TargetType="DataGridCell">
+        <!--  每一行的高度  -->
+        <Setter Property="Height" Value="25" />
+        <!--  每一行的字体  -->
+        <Setter Property="FontSize" Value="13" />
+        <!--  每一行的字体颜色  -->
+        <Setter Property="Foreground" Value="{DynamicResource FontForeground}" />
+        <!--  每一个单元格的模板  -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border
+                        x:Name="Bg"
+                        Background="Transparent"
+                        BorderBrush="#FFCBCBCB"
+                        BorderThickness="0"
+                        UseLayoutRounding="True">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--<Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="#CBCBCB" />
+                <Setter Property="Foreground" Value="#000000" />
+            </Trigger>
+        </Style.Triggers>-->
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,288 @@
+﻿<UserControl
+    x:Class="蓝牙调试助手.Views.Watcher"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:蓝牙调试助手.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Width="350"
+    d:DesignHeight="450"
+    Background="White"
+    DataContext="{Binding Path=Watcher, Source={StaticResource Locator}}"
+    mc:Ignorable="d">
+    <Grid Background="{DynamicResource WatcherBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition />
+            <RowDefinition Height="50" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+            <TextBlock
+                FontSize="25"
+                Foreground="{DynamicResource FontForeground}"
+                Text="连接设备" />
+            <TextBlock
+                Margin="0,10,0,0"
+                FontSize="12.5"
+                Foreground="{DynamicResource FontForeground}"
+                Text="确保你的设备已打开并可被发现，在下面选择要连接的设备."
+                TextWrapping="Wrap" />
+        </StackPanel>
+
+        <ListBox
+            Grid.Row="1"
+            ItemsSource="{Binding BluetoothLECollection}"
+            SelectedItem="{Binding SelectedBluetoothLEInformation}"
+            Style="{StaticResource WatcherListBoxStyle}" d:ItemsSource="{d:SampleData ItemCount=5}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="80" Margin="5,0,10,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Image
+                            Grid.RowSpan="4"
+                            Width="40"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Image.Source>
+                                <MultiBinding Converter="{StaticResource BitmapImageConverter}">
+                                    <Binding Path="DataContext.IsLigth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=UserControl}" />
+                                    <Binding Path="BitmapImage" />
+                                </MultiBinding>
+                            </Image.Source>
+                        </Image>
+
+                        <TextBlock
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="{Binding Name}" />
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="MAC地址：" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding MACAddress}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.RowSpan="4"
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="信号强度" />
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding SignalStrength}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="是否配对：" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding IsPaired}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="能否配对：" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding CanPair}" />
+                        </StackPanel>
+                    </Grid>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border x:Name="border">
+                                    <Grid x:Name="grid" Background="Transparent">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition x:Name="hei" Height="0" />
+                                        </Grid.RowDefinitions>
+                                        <ContentPresenter VerticalAlignment="Top" />
+
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="10,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontSize="13"
+                                            Foreground="{DynamicResource FontForeground}"
+                                            Text="{Binding Path=DataContext.StateText, RelativeSource={RelativeSource Mode=Self}}" />
+
+                                        <Button
+                                            Grid.Row="1"
+                                            Width="80"
+                                            Height="30"
+                                            Margin="0,0,10,10"
+                                            HorizontalAlignment="Right"
+                                            Background="{DynamicResource WatcherBtnBackground}"
+                                            Command="{Binding Path=DataContext.PairingOperation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}"
+                                            Content="{Binding Path=DataContext.IsPaired, Converter={StaticResource PairingOperatingBtnContent}, RelativeSource={RelativeSource Mode=Self}}"
+                                            Foreground="{DynamicResource FontForeground}">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border
+                                                        x:Name="border"
+                                                        Background="{TemplateBinding Background}"
+                                                        BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                                                        BorderThickness="0">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                                        </Trigger>
+
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </Grid>
+
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource BLEListBoxItemMouseOver}" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="hei" Property="Height" Value="40" />
+                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource BLEListBoxItemMouseOver}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+
+        <StackPanel
+            Grid.Row="2"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+                Width="100"
+                Margin="0,0,10,0"
+                Background="{DynamicResource WatcherBtnBackground}"
+                Command="{Binding OkCommand}"
+                Content="确认"
+                Foreground="{DynamicResource FontForeground}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Height="40"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                            BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button
+                Width="100"
+                Margin="0,0,5,0"
+                Background="{DynamicResource WatcherBtnBackground}"
+                Command="{Binding CancelCommand}"
+                Content="取消"
+                Foreground="{DynamicResource FontForeground}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            x:Name="border"
+                            Height="40"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                            BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

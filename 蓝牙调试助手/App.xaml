@@ -1,0 +1,43 @@
+<Application
+    x:Class="蓝牙调试助手.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:蓝牙调试助手.Converter"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:蓝牙调试助手"
+    d1p1:Ignorable="d"
+    StartupUri="/Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Style/CustomWindowStyle.xaml" />
+                <ResourceDictionary Source="/Style/ListBoxStyle.xaml" />
+                <ResourceDictionary Source="/Style/DataGridStyle.xaml" />
+                <ResourceDictionary Source="/Style/ControlStyle.xaml" />
+                <ResourceDictionary Source="/Style/ShellViewStyle.xaml" />
+                <ResourceDictionary Source="/Style/ScrollViewerStyle.xaml" />
+                <ResourceDictionary Source="/Theme/Black.xaml" />
+
+            </ResourceDictionary.MergedDictionaries>
+            <vm:ViewModelLocator
+                xmlns:vm="clr-namespace:蓝牙调试助手.ViewModel"
+                x:Key="Locator"
+                d:IsDataSource="True" />
+            <converter:CharacteristicsOperation x:Key="CharacteristicsOperation" />
+            <converter:CharacteristicsIcon x:Key="CharacteristicsIcon" />
+            <converter:SubscribeStateBtnContent x:Key="SubscribeStateBtnContent" />
+            <converter:ConnectionStatusText x:Key="ConnectionStatusText" />
+            <converter:ConnectionStatusIcon x:Key="ConnectionStatusIcon" />
+            <converter:ConnectionStatusFill x:Key="ConnectionStatusFill" />
+            <converter:CharacteristicEncodingBtnVisible x:Key="CharacteristicEncodingBtnVisible" />
+            <converter:BitmapImageConverter x:Key="BitmapImageConverter" />
+            <converter:BoolToIsVisible x:Key="BoolToIsVisible" />
+            <converter:PairingOperatingBtnContent x:Key="PairingOperatingBtnContent" />
+            <converter:LoopReadingToText x:Key="LoopReadingToText" />
+            <converter:SubscribeStateToText x:Key="SubscribeStateToText" />
+            <converter:ToDouble x:Key="ToDouble" />
+            <converter:MathMultipleConverter x:Key="MathMultipleConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

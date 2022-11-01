@@ -1,0 +1,361 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="clr-namespace:蓝牙调试助手.Converter"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:models="clr-namespace:蓝牙调试助手.Models">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Style/ScrollViewerStyle.xaml" />
+
+    </ResourceDictionary.MergedDictionaries>
+    <converter:PairingOperatingBtnContent x:Key="PairingOperatingBtnContent" />
+
+
+    <Style x:Key="ServiceItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid x:Name="border">
+                        <Grid.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform ScaleY="0" />
+                                <SkewTransform />
+                                <RotateTransform />
+                                <TranslateTransform />
+                            </TransformGroup>
+                        </Grid.LayoutTransform>
+                        <Border
+                            x:Name="MouseOverBorder"
+                            Background="{DynamicResource ServiceMouseOver}"
+                            Opacity="0" />
+                        <ContentPresenter />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="MouseOverBorder" Property="Opacity" Value="1" />
+                        </Trigger>
+
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                        <EasingDoubleKeyFrame KeyTime="00:00:00.2000000" Value="1" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                        <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.3" />
+                                        <EasingDoubleKeyFrame KeyTime="00:00:00.7000000" Value="1" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ServiceListBoxStyle" TargetType="ListBox">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border
+                        Name="Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer Style="{StaticResource CustomScrollViewerStyle}">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="ToggleButtonControlTemplate" TargetType="ToggleButton">
+        <Grid
+            x:Name="icon"
+            Height="10"
+            Background="Transparent"
+            RenderTransformOrigin="0.5 0.5">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform />
+                </TransformGroup>
+            </Grid.RenderTransform>
+            <Viewbox>
+                <Path
+                    Data="M385.536 102.4l398.848 364.544c12.288 10.752 19.456 26.624 19.456 43.008s-7.168 32.256-19.456 43.008l-398.848 364.544c-18.944 17.92-46.08 23.552-70.656 14.336s-40.96-31.232-43.52-57.344V145.408c2.048-26.112 18.944-48.128 43.52-57.344 24.064-9.216 51.712-3.584 70.656 14.336z"
+                    Fill="Black"
+                    Stretch="Fill" />
+            </Viewbox>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsChecked" Value="True">
+                <Trigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="icon"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                To="90"
+                                Duration="0:0:0.1" />
+
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.EnterActions>
+
+                <Trigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetName="icon"
+                                Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                To="0"
+                                Duration="0:0:0.1" />
+
+                        </Storyboard>
+                    </BeginStoryboard>
+                </Trigger.ExitActions>
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="CharacteristicItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border>
+                        <Grid>
+                            <!--<Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition x:Name="border" Height="0" />
+                            </Grid.RowDefinitions>-->
+
+                            <Grid>
+                                <Border
+                                    x:Name="MouseOverBorder"
+                                    Background="{DynamicResource CharacteristicMouseOver}"
+                                    Opacity="0" />
+                                <Border
+                                    x:Name="SelectedBorder"
+                                    Background="{DynamicResource CharacteristicSelected}"
+                                    Opacity="0" />
+                                <ContentPresenter Margin="30,0,0,0" />
+                            </Grid>
+
+                            <!--<Grid Grid.Row="1">
+                                <ToggleButton
+                                    x:Name="IsDownloaderCharacteristics"
+                                    IsChecked="{Binding Path=DataContext.IsDownloaderCharacteristics, RelativeSource={RelativeSource Mode=Self}}"
+                                    Visibility="Collapsed" />
+                                <Border
+                                    x:Name="MouseOverBorder1"
+                                    Background="{DynamicResource CharacteristicMouseOver}"
+                                    Opacity="0" />
+                                <Border
+                                    x:Name="SelectedBorder1"
+                                    Background="{DynamicResource CharacteristicSelected}"
+                                    Opacity="0" />
+
+                                <Grid>
+                                    <Button
+                                        Grid.Row="1"
+                                        Width="60"
+                                        Margin="0,0,10,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Background="{DynamicResource WatcherBtnBackground}"
+                                        Command="{Binding Path=DataContext.DownloadCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                        Content="下载"
+                                        Foreground="{DynamicResource FontForeground}">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border
+                                                    x:Name="border"
+                                                    Height="30"
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{DynamicResource WatcherBtnBorderMouseOver}"
+                                                    BorderThickness="0">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="border" Property="BorderThickness" Value="2" />
+                                                    </Trigger>
+
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource WatcherBtnPressed}" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+
+                            </Grid>-->
+
+                        </Grid>
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="MouseOverBorder"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="1"
+                                            Duration="0:0:0.2" />
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation
+                                            Storyboard.TargetName="MouseOverBorder"
+                                            Storyboard.TargetProperty="Opacity"
+                                            To="0"
+                                            Duration="0:0:0.2" />
+
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="true" />
+                                <Condition Property="IsFocused" Value="true" />
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="SelectedBorder" Property="Opacity" Value="1" />
+                        </MultiTrigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+
+
+    <Style x:Key="WatcherListBoxStyle" TargetType="ListBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <ScrollViewer Style="{StaticResource CustomScrollViewerStyle}">
+                            <ItemsPresenter />
+                        </ScrollViewer>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <ControlTemplate x:Key="DataGridControlTemplate" TargetType="{x:Type DataGrid}">
+        <Border
+            x:Name="border"
+            Padding="{TemplateBinding Padding}"
+            Background="{TemplateBinding Background}"
+            BorderBrush="{TemplateBinding BorderBrush}"
+            BorderThickness="{TemplateBinding BorderThickness}"
+            SnapsToDevicePixels="True">
+            <ScrollViewer x:Name="DG_ScrollViewer" Focusable="false">
+                <ScrollViewer.Template>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <!--  表格头部  -->
+                            <DataGridColumnHeadersPresenter
+                                x:Name="PART_ColumnHeadersPresenter"
+                                Grid.Column="0"
+                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Column}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+                            <!--  主数据区  -->
+                            <Grid Grid.Row="1">
+                                <ScrollContentPresenter
+                                    x:Name="PART_ScrollContentPresenter"
+                                    Grid.ColumnSpan="2"
+                                    CanContentScroll="{TemplateBinding CanContentScroll}" />
+                            </Grid>
+                            <!--  垂直滚动条  -->
+                            <ScrollBar
+                                x:Name="PART_VerticalScrollBar"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                Grid.Column="1"
+                                AutomationProperties.AutomationId="VerticalScrollBar"
+                                Cursor="Arrow"
+                                Maximum="{TemplateBinding ScrollableHeight}"
+                                Minimum="0"
+                                Style="{StaticResource DefaultScrollBar}"
+                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+
+
+                        </Grid>
+                    </ControlTemplate>
+                </ScrollViewer.Template>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    <Button
+                        Grid.Row="1"
+                        Width="100"
+                        Height="30"
+                        Margin="0,5"
+                        Command="{Binding Path=DataContext.AddConfigCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid>
+                                    <Border
+                                        x:Name="border"
+                                        Width="{TemplateBinding Width}"
+                                        Height="{TemplateBinding Height}"
+                                        Background="#767bde"
+                                        CornerRadius="15" />
+                                    <StackPanel
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <TextBlock Foreground="White" Text="添加" />
+                                    </StackPanel>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value=" #8a8ede" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#a576de" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+            </ScrollViewer>
+        </Border>
+    </ControlTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,1166 @@
+﻿<Window
+    x:Class="蓝牙调试助手.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:control="clr-namespace:蓝牙调试助手.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:local="clr-namespace:蓝牙调试助手.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:蓝牙调试助手.Models"
+    x:Name="window"
+    Title="蓝牙调试助手"
+    Width="1400"
+    Height="800"
+    DataContext="{Binding Path=Main, Source={StaticResource Locator}}"
+    Icon="pack://application:,,,/Assets/Images/Icon.png"
+    ResizeMode="CanResizeWithGrip"
+    StateChanged="Window_StateChanged"
+    Style="{StaticResource CustomWindowStyle}"
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
+    <AdornerDecorator x:Name="AdornerLayer" Grid.Row="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="23" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Background="{DynamicResource FormBackground}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="350" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="350" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" Margin="0,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="70" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Border Background="{DynamicResource HeaderBackground}">
+                        <TextBlock
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontSize="13"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="连接与特征" />
+                    </Border>
+
+                    <Border
+                        Grid.Row="1"
+                        Grid.RowSpan="3"
+                        Background="{DynamicResource ContentBackground}" />
+
+                    <Button Grid.Row="1">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewMouseUp">
+                                <i:InvokeCommandAction Command="{Binding SelectCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Grid Margin="0,5" Background="Transparent">
+                                    <Border x:Name="border" Padding="20,0,0,0">
+                                        <Grid x:Name="content" RenderTransformOrigin="0.5 0.5">
+                                            <Grid.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform />
+                                                </TransformGroup>
+                                            </Grid.RenderTransform>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Border
+                                                Width="45"
+                                                Height="45"
+                                                BorderBrush="{DynamicResource FontForeground}"
+                                                BorderThickness="2">
+                                                <Viewbox Margin="5">
+                                                    <Path Data="{Binding Path=DataContext.Connected, Converter={StaticResource ConnectionStatusIcon}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" Stretch="Fill">
+                                                        <Path.Fill>
+                                                            <MultiBinding Converter="{StaticResource ConnectionStatusFill}">
+                                                                <Binding Path="DataContext.Connected" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                                                                <Binding Path="DataContext.IsLigth" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=Window}" />
+                                                            </MultiBinding>
+                                                        </Path.Fill>
+                                                    </Path>
+                                                </Viewbox>
+                                            </Border>
+
+                                            <TextBlock
+                                                x:Name="txt"
+                                                Grid.Column="1"
+                                                Margin="10,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="18"
+                                                Foreground="{DynamicResource FontForeground}"
+                                                Text="{Binding Path=DataContext.Connected, Converter={StaticResource ConnectionStatusText}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" />
+                                        </Grid>
+                                    </Border>
+
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="{DynamicResource ConnectBtnMouseOver}" />
+                                    </Trigger>
+
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="content" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1" />
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00.02" Value="0.97" />
+                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="content" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00" Value="1" />
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00.02" Value="0.97" />
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="content" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)">
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.97" />
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00.02" Value="1" />
+                                                    </DoubleAnimationUsingKeyFrames>
+
+                                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="content" Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)">
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00" Value="0.97" />
+                                                        <EasingDoubleKeyFrame KeyTime="00:00:00.02" Value="1" />
+                                                    </DoubleAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+
+                                        </Trigger.ExitActions>
+                                    </Trigger>
+
+
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Grid Grid.Row="2" Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                        </Grid.RowDefinitions>
+
+                        <Border
+                            Margin="0,0,10,0"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource FontForeground}"
+                            BorderThickness="0,0,0,1">
+                            <TextBlock
+                                Margin="7,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="信息" />
+                        </Border>
+
+                        <StackPanel
+                            Grid.Row="1"
+                            Margin="7,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="名称：" />
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding Name}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Row="2"
+                            Margin="7,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="MAC：" />
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding MACAddress}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Grid.Row="3"
+                            Margin="7,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="服务数量：" />
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="{Binding ServiceCount}" />
+                        </StackPanel>
+
+                    </Grid>
+
+                    <control:ExtensionScrollViewer
+                        Grid.Row="3"
+                        HorizontalScrollBarVisibility="Auto"
+                        Style="{StaticResource CustomScrollViewerStyle}">
+                        <ListBox
+                            Margin="10,0,0,0"
+                            Background="Transparent"
+                            ItemContainerStyle="{StaticResource ServiceItemStyle}"
+                            ItemsSource="{Binding CurrentService}"
+                            PreviewMouseWheel="ListView_PreviewMouseWheel"
+                            Style="{StaticResource ServiceListBoxStyle}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Expander IsExpanded="False">
+                                        <Expander.Header>
+                                            <Grid Grid.Column="1" Height="50">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
+                                                    <TextBlock
+                                                        FontSize="15"
+                                                        Foreground="{DynamicResource FontForeground}"
+                                                        Text="服务名称：" />
+                                                    <TextBlock
+                                                        FontSize="15"
+                                                        Foreground="{DynamicResource FontForeground}"
+                                                        Text="{Binding ServiceName}" />
+                                                </StackPanel>
+
+                                                <StackPanel
+                                                    Grid.Row="1"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                                    <TextBlock
+                                                        VerticalAlignment="Top"
+                                                        FontSize="12"
+                                                        Foreground="{DynamicResource FontForeground}"
+                                                        Text="UUID：" />
+                                                    <TextBlock
+                                                        VerticalAlignment="Top"
+                                                        FontSize="12"
+                                                        Foreground="{DynamicResource FontForeground}"
+                                                        Text="{Binding UUid}" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Expander.Header>
+
+                                        <Expander.Content>
+                                            <ListBox
+                                                x:Name="CharacteristicCollection"
+                                                Width="315"
+                                                ItemContainerStyle="{StaticResource CharacteristicItemStyle}"
+                                                ItemsSource="{Binding CharacteristicCollection}">
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="PreviewMouseUp">
+                                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.CharacteristicSelectedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}" CommandParameter="{Binding Path=SelectedItem, ElementName=CharacteristicCollection}" />
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="Transparent">
+                                                            <Grid Background="Transparent">
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="25" />
+                                                                    <RowDefinition Height="18" />
+                                                                    <RowDefinition Height="18" />
+                                                                </Grid.RowDefinitions>
+
+                                                                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                        FontSize="14"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="特征名称：" />
+                                                                    <TextBlock
+                                                                        FontSize="14"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="{Binding CharacteristicName}" />
+                                                                </StackPanel>
+
+                                                                <StackPanel
+                                                                    HorizontalAlignment="Right"
+                                                                    VerticalAlignment="Bottom"
+                                                                    Orientation="Horizontal">
+                                                                    <Image
+                                                                        Width="14"
+                                                                        Margin="5,0"
+                                                                        Source="pack://application:,,,/Assets/Images/write.png"
+                                                                        Visibility="{Binding CharacteristicProperties, Converter={StaticResource CharacteristicsOperation}, ConverterParameter=write}" />
+                                                                    <Image
+                                                                        Width="14"
+                                                                        Margin="5,0"
+                                                                        Source="pack://application:,,,/Assets/Images/read.png"
+                                                                        Visibility="{Binding CharacteristicProperties, Converter={StaticResource CharacteristicsOperation}, ConverterParameter=read}" />
+
+                                                                    <Image
+                                                                        Width="16"
+                                                                        Margin="5,0"
+                                                                        Source="{Binding SubscribeState, Converter={StaticResource CharacteristicsIcon}}"
+                                                                        Visibility="{Binding CharacteristicProperties, Converter={StaticResource CharacteristicsOperation}, ConverterParameter=notify}" />
+
+                                                                    <CheckBox
+                                                                        Margin="0,0,2,0"
+                                                                        Background="Transparent"
+                                                                        Cursor="Hand"
+                                                                        IsChecked="{Binding SubscriptionMessageEncoding}"
+                                                                        IsThreeState="False">
+                                                                        <CheckBox.Visibility>
+                                                                            <MultiBinding Converter="{StaticResource CharacteristicEncodingBtnVisible}">
+                                                                                <Binding Path="SubscribeState" />
+                                                                                <Binding Path="CharacteristicProperties" />
+                                                                            </MultiBinding>
+                                                                        </CheckBox.Visibility>
+                                                                        <CheckBox.Template>
+                                                                            <ControlTemplate TargetType="CheckBox">
+                                                                                <Grid Width="18" Background="Transparent">
+                                                                                    <Viewbox>
+                                                                                        <Path
+                                                                                            x:Name="icon"
+                                                                                            Data="M448 832v64l-128.32-128L448 640v64h192a192 192 0 0 0 115.84-345.152l0.704-0.896 90.24-90.24A320 320 0 0 1 640 832l-192.064 0.064zM576 192V128l131.008 128L576 384V320H384a192 192 0 0 0-115.712 345.216l-91.072 91.008A320 320 0 0 1 384 192h192.064z"
+                                                                                            Fill="{DynamicResource CharacteristicEncodingBtnBackground}"
+                                                                                            Stretch="Fill" />
+                                                                                    </Viewbox>
+                                                                                </Grid>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter TargetName="icon" Property="Fill" Value="{DynamicResource CharacteristicEncodingBtnMouseOver}" />
+                                                                                    </Trigger>
+
+                                                                                    <Trigger Property="IsPressed" Value="True">
+                                                                                        <Setter TargetName="icon" Property="Fill" Value="{DynamicResource CharacteristicEncodingBtnPressed}" />
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </CheckBox.Template>
+                                                                    </CheckBox>
+
+                                                                </StackPanel>
+
+                                                                <StackPanel
+                                                                    Grid.Row="1"
+                                                                    VerticalAlignment="Center"
+                                                                    Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                        FontSize="11"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="UUID：" />
+                                                                    <TextBlock
+                                                                        FontSize="11"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="{Binding UUid}" />
+                                                                </StackPanel>
+
+                                                                <StackPanel
+                                                                    Grid.Row="2"
+                                                                    VerticalAlignment="Top"
+                                                                    Orientation="Horizontal">
+                                                                    <TextBlock
+                                                                        FontSize="11"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="属性：" />
+                                                                    <TextBlock
+                                                                        FontSize="11"
+                                                                        Foreground="{DynamicResource FontForeground}"
+                                                                        Text="{Binding CharacteristicProperties}" />
+                                                                </StackPanel>
+
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                                <ListBox.Template>
+                                                    <ControlTemplate>
+                                                        <Border>
+                                                            <ItemsPresenter />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </ListBox.Template>
+                                            </ListBox>
+                                        </Expander.Content>
+
+                                        <Expander.Template>
+                                            <ControlTemplate TargetType="Expander">
+                                                <Border BorderBrush="{DynamicResource FontForeground}" BorderThickness="0,1,0,0">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto" />
+                                                            <RowDefinition Height="auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <ToggleButton
+                                                            x:Name="HeaderSite"
+                                                            HorizontalAlignment="Stretch"
+                                                            VerticalAlignment="Center"
+                                                            Background="Transparent"
+                                                            Content="{TemplateBinding Header}"
+                                                            IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                                            <ToggleButton.Template>
+                                                                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                                                    <Grid Background="Transparent">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="20" />
+                                                                            <ColumnDefinition Width="auto" />
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <Viewbox
+                                                                            x:Name="icon"
+                                                                            Height="10"
+                                                                            RenderTransformOrigin="0.5 0.5">
+                                                                            <Viewbox.RenderTransform>
+                                                                                <TransformGroup>
+                                                                                    <RotateTransform />
+                                                                                </TransformGroup>
+                                                                            </Viewbox.RenderTransform>
+                                                                            <Path
+                                                                                Data="M385.536 102.4l398.848 364.544c12.288 10.752 19.456 26.624 19.456 43.008s-7.168 32.256-19.456 43.008l-398.848 364.544c-18.944 17.92-46.08 23.552-70.656 14.336s-40.96-31.232-43.52-57.344V145.408c2.048-26.112 18.944-48.128 43.52-57.344 24.064-9.216 51.712-3.584 70.656 14.336z"
+                                                                                Fill="{DynamicResource FontForeground}"
+                                                                                Stretch="Fill" />
+                                                                        </Viewbox>
+
+                                                                        <ContentPresenter Grid.Column="1" />
+
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="IsChecked" Value="True">
+                                                                            <Trigger.EnterActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation
+                                                                                            Storyboard.TargetName="icon"
+                                                                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                                                                            To="90"
+                                                                                            Duration="0:0:0.1" />
+
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </Trigger.EnterActions>
+
+                                                                            <Trigger.ExitActions>
+                                                                                <BeginStoryboard>
+                                                                                    <Storyboard>
+                                                                                        <DoubleAnimation
+                                                                                            Storyboard.TargetName="icon"
+                                                                                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(RotateTransform.Angle)"
+                                                                                            To="0"
+                                                                                            Duration="0:0:0.1" />
+
+                                                                                    </Storyboard>
+                                                                                </BeginStoryboard>
+                                                                            </Trigger.ExitActions>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </ToggleButton.Template>
+                                                        </ToggleButton>
+
+                                                        <StackPanel Name="ExpandSite" Grid.Row="1">
+                                                            <StackPanel.Height>
+                                                                <MultiBinding Converter="{StaticResource MathMultipleConverter}">
+                                                                    <Binding ElementName="PART_Content" Path="ActualHeight" />
+                                                                    <Binding ElementName="PART_Content" Path="Opacity" />
+                                                                </MultiBinding>
+                                                            </StackPanel.Height>
+                                                            <ContentPresenter
+                                                                Name="PART_Content"
+                                                                Focusable="False"
+                                                                Opacity="0"
+                                                                Visibility="Visible" />
+
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsExpanded" Value="true">
+
+                                                        <Trigger.EnterActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Content" Storyboard.TargetProperty="Visibility">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                                                    </ObjectAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="PART_Content"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="1"
+                                                                        Duration="0:0:0.5">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <QuarticEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.EnterActions>
+
+                                                        <Trigger.ExitActions>
+                                                            <BeginStoryboard>
+                                                                <Storyboard>
+
+                                                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Content" Storyboard.TargetProperty="Visibility">
+                                                                        <DiscreteObjectKeyFrame KeyTime="0:0:0.5" Value="{x:Static Visibility.Collapsed}" />
+                                                                    </ObjectAnimationUsingKeyFrames>
+
+                                                                    <DoubleAnimation
+                                                                        Storyboard.TargetName="PART_Content"
+                                                                        Storyboard.TargetProperty="Opacity"
+                                                                        To="0"
+                                                                        Duration="0:0:0.5">
+                                                                        <DoubleAnimation.EasingFunction>
+                                                                            <QuarticEase EasingMode="EaseOut" />
+                                                                        </DoubleAnimation.EasingFunction>
+                                                                    </DoubleAnimation>
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </Trigger.ExitActions>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Expander.Template>
+
+                                    </Expander>
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </control:ExtensionScrollViewer>
+
+
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="120" />
+                        <RowDefinition Height="200" />
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Border Background="{DynamicResource HeaderBackground}">
+                                <TextBlock
+                                    Margin="10,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="运行日志" />
+                            </Border>
+                            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                                <Button
+                                    Margin="0,0,10,0"
+                                    HorizontalAlignment="Right"
+                                    Click="Button_Click"
+                                    Command="{Binding ClearCommand}"
+                                    Cursor="Hand"
+                                    ToolTip="清除日志">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid Width="20" Background="Transparent">
+                                                <Viewbox>
+                                                    <Path
+                                                        x:Name="icon"
+                                                        Data="M975.36 489.984c0.512-53.248-42.496-96.768-95.744-97.28h-227.84V200.192c0.512-65.536-52.736-119.296-118.272-119.808H501.76c-65.536 0.512-118.784 54.272-118.272 119.808v192.512H151.04c-53.76 0.512-96.256 44.544-95.744 98.304 0.512 41.984 28.16 78.848 68.096 91.648v339.456c-0.512 43.008 34.304 77.824 77.312 78.336h635.392c43.008-0.512 77.312-35.328 77.312-78.336v-341.504c37.376-14.336 61.952-50.688 61.952-90.624z m-532.48-289.792c0-32.768 26.112-59.392 58.88-59.392h31.744c32.768 0.512 58.88 27.136 58.88 59.392v192.512H442.88V200.192z m393.216 739.84h-97.792v-123.392c0.512-16.384-12.288-30.208-28.672-30.72-16.384-0.512-30.208 12.288-30.72 28.672v125.44h-130.56v-123.392c0-16.384-13.312-29.696-29.696-29.696-16.384 0-29.696 13.312-29.696 29.696v123.392H358.4v-123.392c0-16.384-13.312-29.696-29.696-29.696-16.384 0-29.696 13.312-29.696 29.696v123.392H200.704c-9.728 0-17.92-8.192-17.92-17.92v-334.848h671.232v334.848c0 9.728-8.192 17.92-17.92 17.92z m43.52-413.184H151.04c-20.48 0-36.864-16.896-36.864-37.376s16.384-36.864 36.864-36.864h728.576c20.48 0 36.864 16.896 36.864 37.376s-16.384 36.864-36.864 36.864z"
+                                                        Fill="#76afde"
+                                                        Stretch="Fill" />
+                                                </Viewbox>
+                                            </Grid>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="icon" Property="Fill" Value="#8a8ede" />
+                                                </Trigger>
+
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="icon" Property="Fill" Value="#a576de" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                            </StackPanel>
+
+                        </Grid>
+
+                        <ScrollViewer
+                            x:Name="ScrollViewer"
+                            Grid.Row="1"
+                            Style="{StaticResource CustomScrollViewerStyle1}">
+                            <RichTextBox
+                                Margin="0"
+                                Background="{DynamicResource ContentBackground}"
+                                BorderThickness="0"
+                                IsReadOnly="True">
+                                <FlowDocument>
+                                    <Paragraph Name="Log" FontSize="15" />
+                                </FlowDocument>
+                            </RichTextBox>
+                        </ScrollViewer>
+
+                    </Grid>
+
+                    <Grid
+                        Grid.Row="1"
+                        Margin="0,10"
+                        Background="{DynamicResource ContentBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="35" />
+                            <RowDefinition Height="35" />
+                        </Grid.RowDefinitions>
+
+                        <Border Background="{DynamicResource HeaderBackground}">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="当前特征" />
+                        </Border>
+
+                        <Grid Grid.Row="1" Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="特征名称：" />
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="{Binding SelectedCharacteristic.CharacteristicName}" />
+                            </StackPanel>
+
+                            <StackPanel
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="属性：" />
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="{Binding SelectedCharacteristic.CharacteristicProperties}" />
+                            </StackPanel>
+
+                        </Grid>
+
+                        <Grid Grid.Row="2" Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <StackPanel
+                                Grid.Row="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="UUID：" />
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="{Binding SelectedCharacteristic.UUid}" />
+                            </StackPanel>
+
+                            <StackPanel
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="Value：" />
+                                <TextBlock
+                                    FontSize="13"
+                                    Foreground="{DynamicResource FontForeground}"
+                                    Text="{Binding SelectedCharacteristic.Value}" />
+                            </StackPanel>
+
+                        </Grid>
+
+                    </Grid>
+
+                    <Grid Grid.Row="2" Background="{DynamicResource ContentBackground}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30" />
+                            <RowDefinition />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Border Background="{DynamicResource HeaderBackground}">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="数据发送" />
+                        </Border>
+
+                        <TextBox
+                            Grid.Row="1"
+                            Margin="5,5,5,0"
+                            Background="{DynamicResource SendAreaBackground}"
+                            BorderBrush="{DynamicResource SendAreaBorderBackground}"
+                            BorderThickness="1"
+                            FontSize="13"
+                            Foreground="{DynamicResource SendAreaBorderForeground}"
+                            Text="{Binding WriteContent}"
+                            TextWrapping="Wrap" />
+
+                        <StackPanel
+                            Grid.Row="3"
+                            Margin="0,5"
+                            HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                            <Button
+                                Width="100"
+                                Height="40"
+                                Background="#767bde"
+                                Command="{Binding NotifyOperationCommand}"
+                                Foreground="White"
+                                IsEnabled="{Binding IsNotify}"
+                                Style="{StaticResource ToggleButtonStyle}">
+                                <Button.Content>
+                                    <MultiBinding Converter="{StaticResource SubscribeStateToText}">
+                                        <Binding Path="SelectedCharacteristic" />
+                                        <Binding Path="SelectedCharacteristic.SubscribeState" />
+                                    </MultiBinding>
+                                </Button.Content>
+                            </Button>
+
+                            <Button
+                                Width="100"
+                                Height="40"
+                                Margin="10,0"
+                                Background="#767bde"
+                                Command="{Binding ReadCommand}"
+                                Content="{Binding LoopReading, Converter={StaticResource LoopReadingToText}}"
+                                Foreground="White"
+                                IsEnabled="{Binding IsRead}"
+                                Style="{StaticResource BtnStyle}" />
+
+                            <Button
+                                Width="100"
+                                Height="40"
+                                Margin="0,0,10,0"
+                                Background="#767bde"
+                                Command="{Binding WriteWithResultCommand}"
+                                Content="带结果的写入"
+                                Foreground="White"
+                                IsEnabled="{Binding IsWrite}"
+                                Style="{StaticResource BtnStyle}" />
+
+                            <Button
+                                Width="100"
+                                Height="40"
+                                Margin="0,0,10,0"
+                                Background="#767bde"
+                                Command="{Binding WriteCommand}"
+                                Content="写入"
+                                Foreground="White"
+                                IsEnabled="{Binding IsWrite}"
+                                Style="{StaticResource BtnStyle}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                            <CheckBox
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Cursor="Hand"
+                                IsChecked="{Binding IsLoopRead}">
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <Grid
+                                            Width="90"
+                                            Height="25"
+                                            Background="Transparent">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="25" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid
+                                                Width="20"
+                                                Height="20"
+                                                Background="Transparent">
+                                                <Border
+                                                    Width="20"
+                                                    Height="20"
+                                                    VerticalAlignment="Center"
+                                                    BorderBrush="#767bde"
+                                                    BorderThickness="2" />
+                                                <Path
+                                                    x:Name="icon"
+                                                    Width="13"
+                                                    Height="11"
+                                                    Data="M972.4416 274.6368l-570.0608 544.2048-350.8224-334.0288 73.0624-70.0928 277.6576 264.3968L899.3792 204.8Z"
+                                                    Fill="#767bde"
+                                                    Stretch="Fill"
+                                                    Visibility="Hidden" />
+                                            </Grid>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                FontSize="15"
+                                                Foreground="{DynamicResource FontForeground}"
+                                                Text="循环读取" />
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="icon" Property="Visibility" Value="Visible" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+
+                            <CheckBox
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Cursor="Hand"
+                                IsChecked="{Binding CRC}">
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <Grid
+                                            Width="90"
+                                            Height="25"
+                                            Background="Transparent">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="25" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid
+                                                Width="20"
+                                                Height="20"
+                                                Background="Transparent">
+                                                <Border
+                                                    Width="20"
+                                                    Height="20"
+                                                    VerticalAlignment="Center"
+                                                    BorderBrush="#767bde"
+                                                    BorderThickness="2" />
+                                                <Path
+                                                    x:Name="icon"
+                                                    Width="13"
+                                                    Height="11"
+                                                    Data="M972.4416 274.6368l-570.0608 544.2048-350.8224-334.0288 73.0624-70.0928 277.6576 264.3968L899.3792 204.8Z"
+                                                    Fill="#767bde"
+                                                    Stretch="Fill"
+                                                    Visibility="Hidden" />
+                                            </Grid>
+
+                                            <TextBlock
+                                                Margin="5 0"
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontSize="15"
+                                                Foreground="{DynamicResource FontForeground}"
+                                                Text="CRC" />
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="icon" Property="Visibility" Value="Visible" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+                        </StackPanel>
+
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="2" Margin="10,0,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Border Background="{DynamicResource HeaderBackground}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                Margin="10,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                FontSize="13"
+                                Foreground="{DynamicResource FontForeground}"
+                                Text="配置文件" />
+
+                            <CheckBox
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                Cursor="Hand"
+                                IsChecked="{Binding ConfigWriteWay}">
+                                <CheckBox.Template>
+                                    <ControlTemplate TargetType="CheckBox">
+                                        <Grid
+                                            Width="100"
+                                            Height="20"
+                                            Background="Transparent">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid
+                                                Width="16"
+                                                Height="16"
+                                                Background="Transparent">
+                                                <Border
+                                                    Width="14"
+                                                    Height="14"
+                                                    VerticalAlignment="Center"
+                                                    BorderBrush="#767bde"
+                                                    BorderThickness="1" />
+                                                <Path
+                                                    x:Name="icon"
+                                                    Width="8"
+                                                    Height="7"
+                                                    Data="M972.4416 274.6368l-570.0608 544.2048-350.8224-334.0288 73.0624-70.0928 277.6576 264.3968L899.3792 204.8Z"
+                                                    Fill="#767bde"
+                                                    Stretch="Fill"
+                                                    Visibility="Hidden" />
+                                            </Grid>
+
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Center"
+                                                FontSize="13"
+                                                Foreground="{DynamicResource FontForeground}"
+                                                Text="带结果的写入" />
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsChecked" Value="true">
+                                                <Setter TargetName="icon" Property="Visibility" Value="Visible" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </CheckBox.Template>
+                            </CheckBox>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Background="{DynamicResource ContentBackground}" />
+
+                    <Grid Grid.Row="1" Margin="7,0,7,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="13*" />
+                            <ColumnDefinition Width="67*" />
+                            <ColumnDefinition Width="83*" />
+                        </Grid.ColumnDefinitions>
+                        <DataGrid
+                            Grid.ColumnSpan="3"
+                            ItemsSource="{Binding Configs}"
+                            Style="{StaticResource DataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="auto"
+                                    Binding="{Binding Note, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Header="注释">
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBoxBase">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                                        <Border
+                                                            x:Name="border"
+                                                            MinWidth="20"
+                                                            Background="White"
+                                                            BorderBrush="Black"
+                                                            BorderThickness="1"
+                                                            SnapsToDevicePixels="True">
+                                                            <ScrollViewer
+                                                                x:Name="PART_ContentHost"
+                                                                Focusable="false"
+                                                                HorizontalScrollBarVisibility="Hidden"
+                                                                VerticalScrollBarVisibility="Hidden" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Header="内容">
+                                    <DataGridTextColumn.EditingElementStyle>
+                                        <Style TargetType="TextBoxBase">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                                                        <Border
+                                                            x:Name="border"
+                                                            MinWidth="20"
+                                                            Background="White"
+                                                            BorderBrush="Black"
+                                                            BorderThickness="1"
+                                                            SnapsToDevicePixels="True">
+                                                            <ScrollViewer
+                                                                x:Name="PART_ContentHost"
+                                                                Focusable="false"
+                                                                HorizontalScrollBarVisibility="Hidden"
+                                                                VerticalScrollBarVisibility="Hidden" />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </DataGridTextColumn.EditingElementStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="45"
+                                    CanUserResize="False"
+                                    Header="发送">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Command="{Binding Path=DataContext.SendConfigCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                                CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                Cursor="Hand"
+                                                IsEnabled="{Binding Path=DataContext.IsWrite, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                                Style="{StaticResource sendBtnStyle}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn
+                                    Width="45"
+                                    CanUserResize="False"
+                                    Header="删除">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button
+                                                Command="{Binding Path=DataContext.DeleteConfigCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}}"
+                                                CommandParameter="{Binding Path=SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}"
+                                                Cursor="Hand"
+                                                Style="{StaticResource deleteBtnStyle}" />
+
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+
+                        </DataGrid>
+                    </Grid>
+
+
+                </Grid>
+
+            </Grid>
+
+            <Grid Grid.Row="1" Background="{DynamicResource StateAreaBackground}">
+
+                <Grid VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock
+                            Margin="10,0,0,0"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="状态:" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="{Binding StateMessage}" />
+                    </StackPanel>
+
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource FontForeground}" Text="发送:" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="{Binding WriteByteSize}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource FontForeground}" Text="接收:" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="{Binding ReceiveByteSize}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                        <TextBlock Foreground="{DynamicResource FontForeground}" Text="读取:" />
+                        <TextBlock
+                            Margin="5,0,0,0"
+                            Foreground="{DynamicResource FontForeground}"
+                            Text="{Binding ReadByteSize}" />
+                    </StackPanel>
+
+                </Grid>
+
+                <ResizeGrip
+                    x:Name="ResizeGrip"
+                    Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    IsTabStop="False"
+                    WindowChrome.ResizeGripDirection="BottomRight" />
+            </Grid>
+        </Grid>
+    </AdornerDecorator>
+</Window>
