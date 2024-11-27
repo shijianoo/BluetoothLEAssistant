@@ -275,7 +275,7 @@ namespace 蓝牙调试助手.Models
                 }
                 else
                 {
-                    result.State = true;
+                    result.State = false;
                     result.Message = "取消订阅失败！";
                     return result;
                 }
