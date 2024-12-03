@@ -1008,7 +1008,7 @@ namespace 蓝牙调试助手.ViewModel
 
         private string GenerateHexString(string data ,bool crc)
         {
-            StringBuilder sb = new StringBuilder(Regex.Replace(data, @"[^a-fA-f0-9]", ""));
+            StringBuilder sb = new StringBuilder(Regex.Replace(data, @"[^a-fA-F0-9]", ""));
             if (sb.Length % 2 != 0)
             {
                 sb.Insert(sb.Length - 1, "0");
